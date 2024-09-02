@@ -1,22 +1,9 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import dbSetup from "../db";
-
-
-
-
+import dbSetup from "../db/index.js";
 dotenv.config();
 
-// const dbSetup = async () => {
-//     try {
-//         const database = await mongoose.connect(process.env.DB).then(() => {
-//             console.log("Connected Successful")
-//         });
-//     } catch (error) {
-//         console.log(error);
-//         process.exit();
-//     }
-// }
+
 
 await dbSetup();
 
