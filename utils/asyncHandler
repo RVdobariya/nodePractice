@@ -1,0 +1,17 @@
+const asyncHandler = (func) => async (req, res, next, error) => {
+    try {
+        await func(req, res, next, error);
+    } catch (error) {
+        res.status(400).json({ success: false, message: error.message })
+    }
+
+
+}
+
+const asyncHandler2 = (func) => async (req, res, next, error) => {
+    Promise.resolve((func(req, res, next, error))).catch((error) => { next(error) })
+
+
+}
+
+export { asyncHandler }
