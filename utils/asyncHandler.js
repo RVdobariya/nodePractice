@@ -10,7 +10,7 @@ const asyncHandler1 = (func) => async (req, res, next, error) => {
 
 const asyncHandler = (func) => {
     return (req, res, next) => {
-        Promise.resolve(func(req, res, next)).catch((error) => { next(error) })
+        Promise.resolve((func(req, res, next))).catch((error) => { next(error) })
     }
 }
 

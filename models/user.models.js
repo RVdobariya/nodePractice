@@ -4,13 +4,12 @@ import bcrypt from "bcrypt";
 
 const userSchema = new Schema(
     {
-        username: {
+        userName: {
             type: String,
             required: true,
             unique: true,
             lowercase: true,
             trim: true,
-            index: true
         },
         email: {
             type: String,
@@ -23,11 +22,10 @@ const userSchema = new Schema(
             type: String,
             required: true,
             trim: true,
-            index: true
         },
         avatar: {
             type: String, ///cloudnary Url store
-            required: true,
+
         },
         coverImage: {
             type: String
@@ -48,7 +46,7 @@ const userSchema = new Schema(
 
 userSchema.pre("save", async function (next) {
     if (this.isModified("password")) {
-        this.password = bcrypt.hash(this.password, 10)
+        this.password = await bcrypt.hash(this.password, 10)
         next()
     } else {
         next()
@@ -68,4 +66,4 @@ userSchema.methods.generateRefreshToken = async function () {
 }
 
 
-export const User = mongoose.Schema("User", userSchema);
+export const User = mongoose.model('User', userSchema);

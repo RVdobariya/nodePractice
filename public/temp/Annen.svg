@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <g id="other" transform="translate(1191 1569)">
+    <path id="Icon_metro-more-horiz" data-name="Icon metro-more-horiz" d="M11.594,15.424a3.882,3.882,0,1,0,3.882,3.882,3.882,3.882,0,0,0-3.882-3.882Zm23.291,0a3.882,3.882,0,1,0,3.882,3.882,3.882,3.882,0,0,0-3.882-3.882Zm-11.645,0a3.882,3.882,0,1,0,3.882,3.882,3.882,3.882,0,0,0-3.882-3.882Z" transform="translate(-1189.652 -1564.794)" fill="#8b1e75"/>
+    <g id="Ellipse_26" data-name="Ellipse 26" transform="translate(-1191 -1569)" fill="none" stroke="#000" stroke-width="3">
+      <circle cx="24" cy="24" r="24" stroke="none"/>
+      <circle cx="24" cy="24" r="22.5" fill="none"/>
+    </g>
+  </g>
+</svg>
