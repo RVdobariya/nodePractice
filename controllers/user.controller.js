@@ -107,7 +107,6 @@ const registerUser = {
                 { email }
             ]
         })
-        console.log("password === ", userExists);
 
         if (!user) {
             return res.status(400).json(
@@ -121,9 +120,7 @@ const registerUser = {
                 new ApiResponce(400, { "message": "Invalid user credential" })
             )
         }
-
-        const { accessToken, refreshToken } = await generateAccessandRefreshToken(user._id)
-
+        const { accessToken, refreshToken } = await generateAccessandRefreshToken(user?._id)
         const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
 
         const option = {
@@ -132,11 +129,9 @@ const registerUser = {
         }
 
         return res.status(200)
-            .cookie("accessToken", accessToken, option)
-            .cookie("refreshToken", refreshToken, option)
             .json(new ApiResponce(200, {
-                user: loggedInUser, accessToken, refreshToken
-            }, "User loggedIn Successfully success",))
+                user: loggedInUser, accessToken: accessToken, refreshToken: refreshToken
+            }, "User loggedIn Successfully",))
     }),
 
     logout: asyncHandler(async (req, res) => {
@@ -157,17 +152,22 @@ const registerUser = {
         return res.status(200).clearCookie("accessToken").clearCookie("refreshToken").json({ "message": "User is Successfully logged out" })
     }),
 
-    generateAccessandRefreshToken: async (userId) => {
-        try {
-            const user = await User.findById({ userId });
-            const accessToken = await user.generateAccessToken();
-            const refreshToken = await user.generateRefreshToken();
-            user.refreshToken = refreshToken;
-            await user.save({ validateBeforeSave: false });
-            return { accessToken, refreshToken }
-        } catch (error) {
-            ApiResponce(400, { "message": "Something" })
-        }
+
+}
+
+const generateAccessandRefreshToken = async (userId) => {
+    try {
+        console.log("in generateAccessandRefreshToken")
+        const user = await User.findById({ userId });
+        const accessToken = await user.generateAccessToken;
+        const refreshToken = await user.generateRefreshToken;
+        user.refreshToken = refreshToken;
+        await user.save({ validateBeforeSave: false });
+        console.log("token === ", accessToken);
+        console.log("token === ", refreshToken);
+        return { accessToken, refreshToken }
+    } catch (error) {
+        return new ApiResponce(400, { "message": "Something" })
     }
 }
 
