@@ -19,16 +19,13 @@ const uploadOnCloudinary = async (filePath) => {
                 filePath, {
                 // public_id: 'shoes',
                 resource_type: 'auto'
-            }).then((v) => {
-                fs.unlinkSync(filePath);
-                return uploadResult.url;
             })
             .catch((error) => {
                 fs.unlinkSync(filePath);
                 console.log(error);
                 return null;
             });
-
+        return uploadResult.url;
     } catch (error) {
         fs.unlinkSync(filePath);
         return null;
