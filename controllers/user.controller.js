@@ -163,6 +163,7 @@ const registerUser = {
             const accessToken = await user.generateAccessToken();
             const refreshToken = await user.generateRefreshToken();
             user.refereshToken = refreshToken;
+
             await user.save({ validateBeforeSave: false });
 
             return { accessToken, refreshToken }
@@ -172,9 +173,10 @@ const registerUser = {
     },
 
     refreshAccessToken: asyncHandler(async (req, res) => {
+        console.log("roken === ", req.body.refreshToken);
         const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
-        if (incomingRefreshToken) {
-            return ApiResponce(400, {
+        if (!incomingRefreshToken) {
+            return new ApiResponce(400, {
                 "message": "refresh token is required"
             }, "failed")
         }
@@ -182,7 +184,7 @@ const registerUser = {
             const data = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET)
 
             const user = await User.findById(data?._id);
-
+            console.log("roken === ", user);
             if (!user) {
                 return ApiResponce(400, {
                     "message": "invalid refreshToken"
@@ -199,14 +201,14 @@ const registerUser = {
                 httpOnly: true,
                 secure: true
             }
-            return res.json(200)
+            return res.status(200)
                 .cookie("accessToken", accessToken, option)
-                .cookie("refreshToken", refreshToken, option).
-                json(
+                .cookie("refreshToken", refreshToken, option)
+                .json(
                     new ApiResponce(200, {
                         accessToken, refreshToken
-                    }, "Success")
-                )
+                    })
+                );
         } catch (error) {
             throw new ApiError(400, error?.message, "Invalid refreshToken")
         }
