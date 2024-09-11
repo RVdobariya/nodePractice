@@ -5,7 +5,7 @@ import { User } from "../models/user.models.js";
 
 export const verifyJWT = asyncHandler(async (req, res, next) => {
     try {
-        const token = req.heaher("Authoric=zation")?.replace("Bearer ", "");
+        const token = req.header("Authorization")?.replace("Bearer ", "");
         if (!token) {
             return ApiResponce(400, {
                 "message": "Authentocation token is required"
