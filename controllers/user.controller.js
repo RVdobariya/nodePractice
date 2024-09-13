@@ -4,6 +4,7 @@ import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponce } from "../utils/apiResponce.js";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 
 const registerUser = {
@@ -217,22 +218,75 @@ const registerUser = {
 
     changeCurrentPassword: asyncHandler(async (req, res) => {
 
-        const { oldPassword, newPassword } = req.body;
+        const { password, newPassword } = req.body;
 
-        const user = User.findById(req.user._id);
+        console.log("pass === ", password)
+        console.log("new pass === ", newPassword)
+        console.log("userId === ", req.user._id)
 
-        const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
+        const user = await User.findById(req.user._id);
+        console.log("userId === ", user.password)
+
+        // const isPasswordCorrect = await user.isPasswordCorrect(password)
+
+        const isPasswordCorrect = await bcrypt.compare(password, user.password)
 
         if (!isPasswordCorrect) {
             throw new ApiError(400, "Invalid Password")
         }
 
         user.password = newPassword;
-        user.save({ validateBeforeSave: true });
+        await user.save({ validateBeforeSave: true });
 
         return res.status(200).json(
-            ApiResponce(200, "password is Successfully changed")
+            new ApiResponce(200, "password is Successfully changed")
         )
+
+    }),
+
+    updateDetail: asyncHandler(async (req, res, next) => {
+        const { fullName, email } = req.body;
+
+        if (!(!fullName || !email)) {
+            throw new ApiError(400, "Field are required")
+        }
+
+        const user = User.findByIdAndUpdate(req.user?._id, {
+            $set: {
+                fullName, email: email
+            }
+        }, {
+            new: true
+        }).select("-password")
+
+        user.save();
+
+        return res.status(200).json(
+            new ApiResponce(200, {}, "success")
+        )
+
+
+    }),
+
+    updateAvatar: asyncHandler(async (req, res) => {
+
+        const avatarFile = req.file?.path;
+
+        if (!avatarFile) {
+            throw new ApiError(400, "Avatar file is missing")
+        }
+
+        const avatar = await uploadOnCloudinary(avatarFile);
+        if (!avatar.url) {
+            throw new ApiError(400, "File not uploaded")
+        }
+
+        const user = await User.findByIdAndUpdate(req.user._id, {
+            $set: {
+
+            },
+        }, { new: true })
+
 
     })
 

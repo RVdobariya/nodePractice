@@ -19,6 +19,8 @@ routes.route("/logout").post(verifyJWT, registerUser.logout)
 
 routes.route("/refreshToken").post(registerUser.refreshAccessToken)
 
+routes.route("/changePassword").post(verifyJWT, registerUser.changeCurrentPassword)
+
 
 
 export default routes;

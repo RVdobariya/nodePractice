@@ -7,7 +7,7 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
     try {
         const token = req.header("Authorization")?.replace("Bearer ", "");
         if (!token) {
-            return ApiResponce(400, {
+            return new ApiResponce(400, {
                 "message": "Authentocation token is required"
             })
         }
@@ -16,7 +16,7 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
         const user = await User.findById(decodedInfo?._id).select("-password -refreshToken");
         if (!user) {
             return res.status(400).json(
-                ApiResponce(400, {
+                new ApiResponce(400, {
                     "message": "user dos not exits"
                 })
             )
