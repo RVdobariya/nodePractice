@@ -116,7 +116,8 @@ const registerUser = {
             )
             // throw new ApiError(409, "This user is Already exits");
         }
-        var correct = await user.isPasswordCorrect(password);
+        // var correct = await user.isPasswordCorrect(password);
+        var correct = await bcrypt.compare(password, user.password);
         if (!correct) {
             return res.status(400).json(
                 new ApiResponce(400, { "message": "Invalid user credential" })
@@ -236,7 +237,7 @@ const registerUser = {
         }
 
         user.password = newPassword;
-        await user.save({ validateBeforeSave: true });
+        await user.save({ validateBeforeSave: false });
 
         return res.status(200).json(
             new ApiResponce(200, "password is Successfully changed")
@@ -288,6 +289,73 @@ const registerUser = {
         }, { new: true })
 
 
+    }),
+
+    getUserChannelProfile: asyncHandler(async (req, res) => {
+        const { userName } = req.params;
+
+        if (!userName?.trim()) {
+            throw new ApiError(400, "Name missing")
+        }
+
+        const channelDetail = await User.aggregate([
+            {
+                $match: {
+                    userName: userName?.toLowerCase()
+                }
+            },
+            {
+                $lookup: {
+                    from: "subscriptions",
+                    localField: "_id",
+                    foreignField: "channel",
+                    as: "subscribers"
+                }
+            },
+            {
+                $lookup: {
+                    from: "subscriptions",
+                    localField: "_id",
+                    foreignField: "subscriber",
+                    as: "subscribe"
+                }
+            },
+            {
+                $addFields: {
+                    subscribersCount: {
+                        $size: "$subscribers"
+                    },
+                    subscribe: { $size: "$subscribe" },
+                    isSubscribed: {
+                        $cond: {
+                            if: {
+                                $in: [req.user?._id, "$subscribers.subscriber"]
+                            },
+                            then: true,
+                            else: false
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    subscribersCount: 1,
+                    subscribe: 1,
+                    isSubscribed: 1,
+                    fullName: 1,
+                    userName: 1,
+                    avatar: 1
+                }
+            }
+        ])
+
+        if (!channelDetail?.length) {
+            throw new ApiError(400, "No record found")
+        }
+
+        return res.status(200).json(
+            new ApiResponce(200, channelDetail[0], "data success")
+        )
     })
 
 }
