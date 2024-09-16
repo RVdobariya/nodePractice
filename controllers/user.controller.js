@@ -5,6 +5,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponce } from "../utils/apiResponce.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import mongoose from "mongoose";
 
 
 const registerUser = {
@@ -216,7 +217,6 @@ const registerUser = {
         }
     }),
 
-
     changeCurrentPassword: asyncHandler(async (req, res) => {
 
         const { password, newPassword } = req.body;
@@ -355,6 +355,55 @@ const registerUser = {
 
         return res.status(200).json(
             new ApiResponce(200, channelDetail[0], "data success")
+        )
+    }),
+
+    getWatchHistory: asyncHandler(async (req, res) => {
+        const watchHistory = await User.aggregate([
+            {
+                $match: {
+                    _id: new mongoose.Types.ObjectId(req.user._id)
+                }
+            },
+            {
+                $lookup: {
+                    from: "videos",
+                    localField: "watchHistory",
+                    foreignField: "_id",
+                    as: "watchHistory",
+                    pipeline: [
+                        {
+                            $lookup: {
+                                from: "users",
+                                localField: "owner",
+                                foreignField: "_id",
+                                as: "owner",
+                                pipeline: [
+                                    {
+                                        $project: {
+                                            fullName: 1,
+                                            userName: 1,
+                                            watchHistory: 1,
+                                            avatar: 1
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            $addFields: {
+                                owner: {
+                                    $first: "$owner"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ])
+
+        return await res.status(200).json(
+            new ApiResponce(200, watchHistory[0].watchHistory, "Success")
         )
     })
 

@@ -5,6 +5,7 @@ const routes = Router();
 // const routes = express.Router();
 import { upload } from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
+import multer from "multer";
 
 
 routes.route("/register").post(upload.fields(
@@ -20,6 +21,14 @@ routes.route("/logout").post(verifyJWT, registerUser.logout)
 routes.route("/refreshToken").post(registerUser.refreshAccessToken)
 
 routes.route("/changePassword").post(verifyJWT, registerUser.changeCurrentPassword)
+
+routes.route("/updateDetail").patch(verifyJWT, registerUser.updateDetail)
+
+routes.route("/updateAvatar").patch(verifyJWT, upload.single("avatar"), registerUser.updateAvatar)
+
+routes.route("/getUserChannelProfile/:userName").get(verifyJWT, registerUser.getUserChannelProfile);
+
+routes.route("/watchHistory").get(verifyJWT, registerUser.getWatchHistory);
 
 
 
