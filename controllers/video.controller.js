@@ -35,6 +35,11 @@ const video = {
     }),
 
     getVideo: asyncHandler(async (req, res) => {
+
+        const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
         const videoList = await Video.aggregate([
             {
                 $match: {
@@ -45,6 +50,12 @@ const video = {
                 $project: {
                     owner: 0 // Exclude the owner field
                 }
+            },
+            {
+                $skip: skip
+            },
+            {
+                $limit: limit
             }
         ])
 
@@ -54,8 +65,11 @@ const video = {
             )
         }
 
+        const totalVideos = await Video.countDocuments({ owner: req.user?._id });
+
+
         return res.status(200).json(
-            new ApiResponce(200, { "videoList": videoList }, "Video fetchSuccessfully Successfully")
+            new ApiResponce(200, { "videoList": videoList, "count": totalVideos }, "Video fetchSuccessfully Successfully")
         )
 
     })

@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "36a85181-0357-49d1-99ac-dc51a72b358c",
 		"name": "practice",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "30018832"
 	},
 	"item": [
@@ -51,7 +51,15 @@
 								}
 							]
 						},
-						"url": "{{ngrok}}video/addVideo"
+						"url": {
+							"raw": "{{ngrok}}video/addVideo",
+							"host": [
+								"{{ngrok}}video"
+							],
+							"path": [
+								"addVideo"
+							]
+						}
 					},
 					"response": []
 				},
@@ -66,7 +74,21 @@
 								"type": "text"
 							}
 						],
-						"url": "{{ngrok}}video/getVideo"
+						"url": {
+							"raw": "{{ngrok}}video/getVideo?limit=12",
+							"host": [
+								"{{ngrok}}video"
+							],
+							"path": [
+								"getVideo"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "12"
+								}
+							]
+						}
 					},
 					"response": []
 				}
@@ -107,7 +129,15 @@
 						}
 					]
 				},
-				"url": "{{ngrok}}user/register"
+				"url": {
+					"raw": "{{ngrok}}user/register",
+					"host": [
+						"{{ngrok}}user"
+					],
+					"path": [
+						"register"
+					]
+				}
 			},
 			"response": []
 		},
@@ -145,7 +175,15 @@
 						}
 					}
 				},
-				"url": "{{ngrok}}user/login"
+				"url": {
+					"raw": "{{ngrok}}user/login",
+					"host": [
+						"{{ngrok}}user"
+					],
+					"path": [
+						"login"
+					]
+				}
 			},
 			"response": []
 		},
@@ -169,7 +207,15 @@
 						}
 					}
 				},
-				"url": "{{ngrok}}user/logout"
+				"url": {
+					"raw": "{{ngrok}}user/logout",
+					"host": [
+						"{{ngrok}}user"
+					],
+					"path": [
+						"logout"
+					]
+				}
 			},
 			"response": []
 		},
@@ -187,7 +233,15 @@
 						}
 					}
 				},
-				"url": "{{ngrok}}user/refreshToken"
+				"url": {
+					"raw": "{{ngrok}}user/refreshToken",
+					"host": [
+						"{{ngrok}}user"
+					],
+					"path": [
+						"refreshToken"
+					]
+				}
 			},
 			"response": []
 		},
@@ -211,7 +265,15 @@
 						}
 					}
 				},
-				"url": "{{ngrok}}user/changePassword"
+				"url": {
+					"raw": "{{ngrok}}user/changePassword",
+					"host": [
+						"{{ngrok}}user"
+					],
+					"path": [
+						"changePassword"
+					]
+				}
 			},
 			"response": []
 		},
@@ -235,7 +297,15 @@
 						}
 					}
 				},
-				"url": "{{ngrok}}user/updateDetail"
+				"url": {
+					"raw": "{{ngrok}}user/updateDetail",
+					"host": [
+						"{{ngrok}}user"
+					],
+					"path": [
+						"updateDetail"
+					]
+				}
 			},
 			"response": []
 		},
@@ -260,7 +330,15 @@
 						}
 					]
 				},
-				"url": "{{ngrok}}user/updateAvatar"
+				"url": {
+					"raw": "{{ngrok}}user/updateAvatar",
+					"host": [
+						"{{ngrok}}user"
+					],
+					"path": [
+						"updateAvatar"
+					]
+				}
 			},
 			"response": []
 		},
@@ -275,7 +353,16 @@
 						"type": "text"
 					}
 				],
-				"url": "{{ngrok}}user/getUserChannelProfile/rvt_dobariya"
+				"url": {
+					"raw": "{{ngrok}}user/getUserChannelProfile/rvt_dobariya",
+					"host": [
+						"{{ngrok}}user"
+					],
+					"path": [
+						"getUserChannelProfile",
+						"rvt_dobariya"
+					]
+				}
 			},
 			"response": []
 		}
