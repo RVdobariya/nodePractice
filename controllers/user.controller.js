@@ -248,19 +248,22 @@ const registerUser = {
     updateDetail: asyncHandler(async (req, res, next) => {
         const { fullName, email } = req.body;
 
-        if (!(!fullName || !email)) {
+        if (!fullName || !email) {
             throw new ApiError(400, "Field are required")
         }
 
-        const user = User.findByIdAndUpdate(req.user?._id, {
-            $set: {
-                fullName, email: email
+        const user = await User.findByIdAndUpdate(req.user?._id,
+            {
+                $set: {
+                    fullName, email
+                }
+            },
+            {
+                new: true
             }
-        }, {
-            new: true
-        }).select("-password")
+        ).select("-password")
 
-        user.save();
+        await user.save();
 
         return res.status(200).json(
             new ApiResponce(200, {}, "success")
@@ -273,26 +276,40 @@ const registerUser = {
 
         const avatarFile = req.file?.path;
 
+        console.error("paths ", avatarFile);
+
         if (!avatarFile) {
             throw new ApiError(400, "Avatar file is missing")
         }
 
         const avatar = await uploadOnCloudinary(avatarFile);
-        if (!avatar.url) {
+
+        console.log("Avartar file === ", avatar)
+        if (!avatar) {
             throw new ApiError(400, "File not uploaded")
         }
 
-        const user = await User.findByIdAndUpdate(req.user._id, {
-            $set: {
-
+        const user = await User.findByIdAndUpdate(req.user._id,
+            {
+                $set: {
+                    avatar
+                },
             },
-        }, { new: true })
+            { new: true })
+
+        await user.save();
+
+        return res.status(200).json(
+            new ApiResponce(200, {}, "success")
+        )
 
 
     }),
 
     getUserChannelProfile: asyncHandler(async (req, res) => {
         const { userName } = req.params;
+
+        console.log("UserName === ", userName)
 
         if (!userName?.trim()) {
             throw new ApiError(400, "Name missing")
@@ -322,14 +339,12 @@ const registerUser = {
             },
             {
                 $addFields: {
-                    subscribersCount: {
-                        $size: "$subscribers"
-                    },
+                    subscribersCount: { $size: "$subscribers" },
                     subscribe: { $size: "$subscribe" },
                     isSubscribed: {
-                        $cond: {
+                        $cond: { /// $cond means condition
                             if: {
-                                $in: [req.user?._id, "$subscribers.subscriber"]
+                                $in: [req.user?._id, "$subscribers.subscriber"]  /// $in means include
                             },
                             then: true,
                             else: false
@@ -347,6 +362,36 @@ const registerUser = {
                     avatar: 1
                 }
             }
+            // {
+            //     $match: {
+            //         userName: userName?.toLowerCase()
+            //     }
+            // },
+            // {
+            //     $lookup: {
+            //         from: "videos",
+            //         localField: "_id",
+            //         foreignField: "owner",
+            //         as: "views"
+            //     }
+            // },
+            // {
+            //     $addFields: {
+            //         views: {
+            //             $size: "$views"
+            //             // $size: "$subscribers"
+            //         },
+
+            //     }
+            // },
+            // {
+            //     $project: {
+            //         fullName: 1,
+            //         userName: 1,
+            //         avatar: 1,
+            //         views: 1
+            //     }
+            // }
         ])
 
         if (!channelDetail?.length) {

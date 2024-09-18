@@ -1,0 +1,283 @@
+{
+	"info": {
+		"_postman_id": "36a85181-0357-49d1-99ac-dc51a72b358c",
+		"name": "practice",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "30018832"
+	},
+	"item": [
+		{
+			"name": "video",
+			"item": [
+				{
+					"name": "addVideo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "videoFile",
+									"type": "file",
+									"src": "/Users/dreamworld/Downloads/Group 48098502.png"
+								},
+								{
+									"key": "title",
+									"value": "qqqq",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "qqqq",
+									"type": "text"
+								},
+								{
+									"key": "duration",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "owner",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": "{{ngrok}}video/addVideo"
+					},
+					"response": []
+				},
+				{
+					"name": "getVideo",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": "{{ngrok}}video/getVideo"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "raviqqqq@yopmail.com",
+							"type": "text"
+						},
+						{
+							"key": "userName",
+							"value": "rv_dobariya",
+							"type": "text"
+						},
+						{
+							"key": "fullName",
+							"value": "Ravi Kumar Dobariya",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "RAVi@7284",
+							"type": "text"
+						},
+						{
+							"key": "avatar",
+							"type": "file",
+							"src": "/Users/dreamworld/Downloads/Frame 120.png"
+						}
+					]
+				},
+				"url": "{{ngrok}}user/register"
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();",
+							"pm.environment.set(\"token\", jsonData.data.accessToken);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"packages": {},
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"ravi@yopmail.com\",\n    \"password\": \"r\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{ngrok}}user/login"
+			},
+			"response": []
+		},
+		{
+			"name": "logout",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"raviaswq@yopmail.com\",\n    \"password\": \"RAVi@7284\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{ngrok}}user/logout"
+			},
+			"response": []
+		},
+		{
+			"name": "refreshAccessToken",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"refreshToken\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmUxNWY4Y2U4NTYxNzg1MmMzZWFmMzciLCJpYXQiOjE3MjYwNTYyNjAsImV4cCI6MTcyNjkyMDI2MH0.z6RukAuuHyidnqaL-K1cl1Xg1KQQDWxG8fTlBugSAeM\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{ngrok}}user/refreshToken"
+			},
+			"response": []
+		},
+		{
+			"name": "changePassword",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmUxNWY4Y2U4NTYxNzg1MmMzZWFmMzciLCJlbWFpbCI6InJAeW9wbWFpbC5jb20iLCJmdWxsTmFtZSI6IlJhdmkgS3VtYXIgRG9iYXJpeWEiLCJpYXQiOjE3MjYyMDI4MjcsImV4cCI6MTcyNjI4OTIyN30.a-VllEFmnlDLxJB35tkxSCrJ3Ka5-BHOpkxZQsOh3j8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"password\": \"RAVi@7284\",\n    \"newPassword\": \"RAVi@7284\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{ngrok}}user/changePassword"
+			},
+			"response": []
+		},
+		{
+			"name": "updateDetail",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmUxNWY4Y2U4NTYxNzg1MmMzZWFmMzciLCJlbWFpbCI6InJAeW9wbWFpbC5jb20iLCJmdWxsTmFtZSI6IlJhdmkgS3VtYXIgRG9iYXJpeWEiLCJpYXQiOjE3MjYyMDI4MjcsImV4cCI6MTcyNjI4OTIyN30.a-VllEFmnlDLxJB35tkxSCrJ3Ka5-BHOpkxZQsOh3j8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fullName\": \"RAVi@7284\",\n    \"email\": \"RAVI@yopmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{ngrok}}user/updateDetail"
+			},
+			"response": []
+		},
+		{
+			"name": "updateAvatar",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "avatar",
+							"type": "file",
+							"src": "/Users/dreamworld/Downloads/Group 48098502.png"
+						}
+					]
+				},
+				"url": "{{ngrok}}user/updateAvatar"
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": "{{ngrok}}user/getUserChannelProfile/rvt_dobariya"
+			},
+			"response": []
+		}
+	]
+}

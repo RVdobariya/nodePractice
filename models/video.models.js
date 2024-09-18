@@ -7,9 +7,9 @@ const videoSchema = new Schema(
         videoFile: {
             type: String, required: true,
         },
-        thumbnail: {
-            type: String, required: true,
-        },
+        // thumbnail: {
+        //     type: String, required: true,
+        // },
         title: {
             type: String, required: true,
         },
@@ -22,7 +22,9 @@ const videoSchema = new Schema(
         Views: {
             type: Number,
             default: 0,
-
+        },
+        Likes: {
+            type: Number, default: 0
         },
         isPublished: {
             type: Boolean,
