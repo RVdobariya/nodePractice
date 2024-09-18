@@ -67,7 +67,6 @@ const video = {
 
         const totalVideos = await Video.countDocuments({ owner: req.user?._id });
 
-
         return res.status(200).json(
             new ApiResponce(200, { "videoList": videoList, "count": totalVideos }, "Video fetchSuccessfully Successfully")
         )
