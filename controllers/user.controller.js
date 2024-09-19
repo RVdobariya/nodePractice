@@ -451,9 +451,7 @@ const registerUser = {
             new ApiResponce(200, watchHistory[0].watchHistory, "Success")
         )
     })
-
 }
-
 
 
 export { registerUser };

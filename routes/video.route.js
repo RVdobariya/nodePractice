@@ -8,5 +8,6 @@ const router = Router()
 
 router.route("/addVideo").post(verifyJWT, upload.single("videoFile"), video.addVideo)
 router.route("/getVideo").get(verifyJWT, video.getVideo)
+router.route("/likeVideo/:id").post(verifyJWT, video.likeVideo)
 
 export default router;

@@ -36,9 +36,9 @@ const video = {
 
     getVideo: asyncHandler(async (req, res) => {
 
-        const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
-        const limit = parseInt(req.query.limit) || 10;
-        const skip = (page - 1) * limit;
+        // const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+        // const limit = parseInt(req.query.limit) || 10;
+        // const skip = (page - 1) * limit;
 
         const videoList = await Video.aggregate([
             {
@@ -46,17 +46,34 @@ const video = {
                     owner: req.user?._id
                 }
             },
+
             {
-                $project: {
-                    owner: 0 // Exclude the owner field
+                $addFields: {
+                    isLikedByUser: {
+                        $cond: { /// $cond means condition
+                            if: {
+                                $in: [req.user?._id, "$LikeUserList"]  /// $in means include
+                            },
+                            then: true,
+                            else: false
+                        }
+                    },
                 }
             },
             {
-                $skip: skip
+                $project: {
+                    owner: 0,
+                    LikeUserList: 0,
+
+                    // Exclude the owner field
+                }
             },
-            {
-                $limit: limit
-            }
+            // {
+            //     $skip: skip
+            // },
+            // {
+            //     $limit: limit
+            // }
         ])
 
         if (!videoList?.length) {
@@ -68,10 +85,66 @@ const video = {
         const totalVideos = await Video.countDocuments({ owner: req.user?._id });
 
         return res.status(200).json(
-            new ApiResponce(200, { "videoList": videoList, "count": totalVideos }, "Video fetchSuccessfully Successfully")
+            new ApiResponce(200, { "videoList": videoList, "count": totalVideos }, "Video fetch Successfully")
         )
 
-    })
+    }),
+
+    likeVideo: asyncHandler(async (req, res) => {
+        const videoId = req.params.id;
+        console.log('Video id === ', videoId)
+        const video = await Video.findById(videoId);
+
+        if (!video) {
+            return res.status(404).send('Video not found');
+        }
+
+        // Check if userId already exists in LikeUserList
+        const isLiked = video.LikeUserList.includes(req.user?._id);
+
+        if (!videoId) {
+            throw new ApiError(400, "Please define videoId")
+        }
+
+        let count;
+        if (isLiked) {
+            count = await Video.findByIdAndUpdate(
+                videoId,
+                {
+                    $inc: { Likes: -1 },
+                    $pull: { LikeUserList: req.user._id }
+                },
+                // $inc increments the field by 1
+                { new: true } // Return the updated document
+            );
+
+            if (!count) {
+                throw new ApiError(400, "Something went Wrong")
+            }
+
+            return res.status(200).json(
+                new ApiResponce(200, "Success")
+            )
+        } else {
+            count = await Video.findByIdAndUpdate(
+                videoId,
+                {
+                    $inc: { Likes: 1 },
+                    $push: { LikeUserList: req.user._id }
+                },
+                // $inc increments the field by 1
+                { new: true } // Return the updated document
+            );
+
+            if (!count) {
+                throw new ApiError(400, "Something went Wrong")
+            }
+
+            return res.status(200).json(
+                new ApiResponce(200, "Success")
+            )
+        }
+    }),
 }
 
 export { video }

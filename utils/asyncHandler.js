@@ -4,6 +4,4 @@ const asyncHandler = (func) => {
     }
 }
 
-
-
 export { asyncHandler }

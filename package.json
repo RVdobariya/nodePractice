@@ -11,7 +11,8 @@
   "author": "Ravi Dobariya",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.4",
+    "typescript": "^5.6.2"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
