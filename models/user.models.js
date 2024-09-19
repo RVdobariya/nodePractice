@@ -25,7 +25,6 @@ const userSchema = new Schema(
         },
         avatar: {
             type: String, ///cloudnary Url store
-
         },
         coverImage: {
             type: String
@@ -49,7 +48,6 @@ userSchema.pre("save", async function (next) {
         console.log("fdsfsd")
         this.password = await bcrypt.hash(this.password, 10)
         next()
-
     } else {
         next()
     }
