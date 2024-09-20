@@ -4,6 +4,7 @@ import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponce } from "../utils/apiResponce.js";
 import jwt from "jsonwebtoken";
+import fs from "fs"
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 
@@ -63,6 +64,7 @@ const registerUser = {
         }
 
         const avatarImagPath = await uploadOnCloudinary(avatar);
+
         // const coverImagPath = await uploadOnCloudinary(coverImage);
         if (!avatarImagPath) {
             return res.status(400).json(
