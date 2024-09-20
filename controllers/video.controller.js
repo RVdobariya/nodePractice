@@ -1,7 +1,7 @@
 import { ApiError } from "../utils/apiError.js";
 import { ApiResponce } from "../utils/apiResponce.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { Video } from "/Users/dreamworld/Documents/MyWork/backend/practice/models/video.models.js"
+import { Video } from "../models/video.models.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const video = {
