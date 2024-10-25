@@ -4,9 +4,10 @@ import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponce } from "../utils/apiResponce.js";
 import jwt from "jsonwebtoken";
-import fs from "fs"
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
+import nodemailer from "nodemailer";
+
 
 
 const registerUser = {
@@ -80,6 +81,25 @@ const registerUser = {
         if (!findUser) {
             throw new ApiError(400, "error");
         }
+        const transporter = nodemailer.createTransport({
+
+            service: "gmail",
+            secure: false, // true for port 465, false for other ports
+            auth: {
+                user: "ravidobariya204.rejoice@gmail.com",
+                pass: "tcsyemaluelbawkp",
+            },
+        });
+
+        const info = await transporter.sendMail({
+            from: '"Register demo" <ravidobariya7284@gmail.com>', // sender address
+            to: "janvi237.rejoice@gmail.com", // list of receivers
+            subject: "Successfully Register", // Subject line
+            text: "You are registered successfully", // plain text body
+            html: "<b>Hello Beautiful!!!!!</b>", // html body
+        });
+
+        console.log("Mail info ==== ", info)
 
 
         return res.status(200).json(
